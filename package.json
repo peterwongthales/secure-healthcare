@@ -4,6 +4,9 @@
   "description": "Secure Healthcare Backend",
   "main": "index.js",
   "scripts": {
+    "build": "echo \"Building server code from swagger...\" && rm -rf build && snc -o build swagger.yml && cd build && npm install",
+    "start": "cd build && npm start",
+    "dev": "cd build && npm run-script dev",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "ssia@gemalto.com",
@@ -15,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/shyrwinsia/secure-healthcare/issues"
   },
-  "homepage": "https://github.com/shyrwinsia/secure-healthcare#readme"
+  "homepage": "https://github.com/shyrwinsia/secure-healthcare#readme",
+  "dependencies": {
+    "swagger-node-codegen": "^1.3.1"
+  }
 }
