@@ -61,4 +61,4 @@ typings/
 .next
 
 # src build from swagger
-src/
+build/
