@@ -62,3 +62,7 @@ typings/
 
 # src build from swagger
 build/
+
+# other stuff
+.editorconfig
+.eslintrc

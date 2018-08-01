@@ -1,6 +1,6 @@
 swagger: "2.0"
 info:
-  description: "This is a API Server for Secure Healthcare."
+  description: "This is a API Server Backend for Secure Healthcare."
   version: "1.0.0"
   title: "Secure Healthcare"
   termsOfService: "http://swagger.io/terms/"

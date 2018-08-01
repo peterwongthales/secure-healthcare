@@ -15,7 +15,15 @@ npm run-script build
 
 Rinse and repeat.
 
-TODO:
+## Setting up your local Swagger editor
 
+```
+docker pull swaggerapi/swagger-editor
+docker run -d -p 80:8080 swaggerapi/swagger-editor
+```
+
+## TODO:
+- [ ] Finalize Swagger file
+- [ ] Separate to more manageable chunks
 - [ ] Add application logic folder in App
 - [ ] Change the build script to copy the App to the server
