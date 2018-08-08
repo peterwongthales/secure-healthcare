@@ -1,0 +1,1 @@
+curl -X POST "http://localhost:3000/v1/user" -H  "accept: application/json" -H  "Content-Type: application/json" -d "{  \"username\": \"string\",  \"firstName\": \"string\",  \"lastName\": \"string\",  \"email\": \"string\",  \"password\": \"string\",  \"phone\": \"string\",  \"photoUrl\": \"string\"}"

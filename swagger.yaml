@@ -1,0 +1,244 @@
+swagger: "2.0"
+
+info:
+  description: "This is a API Server Backend for Secure Healthcare"
+  version: "1.0.0"
+  title: "Secure Healthcare"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "ssia@gemalto.com"
+  license:
+    name: "MIT"
+    url: "https://opensource.org/licenses/MIT"
+
+host: "localhost:3000"
+basePath: "/v1"
+
+schemes:
+- "https"
+- "http"
+
+tags:
+  - name: user
+    description: Operations on users
+  - name: appointment
+    description: Access or manage appointments
+  - name: policy
+    description: Everything about policies
+
+definitions:
+  User:
+    type: "object"
+    properties:
+      username:
+        type: "string"
+        description: "The user's username"
+      password:
+        type: "string"
+        description: "The user's password"
+      firstName:
+        type: "string"
+        description: "The user's first name"
+      lastName:
+        type: "string"
+        description: "The user's last name"
+      email:
+        type: "string"
+        description: "The user's email address"
+      phone:
+        type: "string"
+        description: "The user's contact number"
+      photoUrl:
+        type: "string"
+        description: "The user's profile photo url"
+      type:
+        type: "string"
+        description: "The user type"
+        schema:
+          $ref: "#/definitions/User"
+  UserType:
+    type: "string"
+    enum:
+    - "patient"
+    - "doctor"
+    - "agent"
+    - "approver"
+  Appointment:
+    type: "object"
+    properties:
+      username:
+        type: "string"
+        description: "The user's username"
+      password:
+        type: "string"
+        description: "The user's password"
+
+paths:
+  /user:
+    post:
+      tags:
+        - "user"
+      summary: "Create user"
+      description: "Create a user in the system"
+      operationId: "createUser"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Created user object"
+          required: true
+          schema:
+            $ref: "#/definitions/User"
+      responses:
+        default:
+          description: "Successful operation"
+  /user/login:
+    get:
+      tags:
+        - "user"
+      summary: "Logs user into the system"
+      description: "Logs the user in to the system"
+      operationId: "loginUser"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "username"
+          in: "query"
+          description: "The username for login"
+          required: true
+          type: "string"
+        - name: "password"
+          in: "query"
+          description: "The password for login in clear text"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "Successful operation"
+        400:
+          description: "Invalid username/password"
+  /user/logout:
+    get:
+      tags:
+        - "user"
+      summary: "Logs out current logged in user"
+      description: "Logs the user out of the system"
+      operationId: "logoutUser"
+      produces:
+        - "application/json"
+      parameters: []
+      responses:
+        default:
+          description: "Successful operation"
+  /user/{username}:
+    get:
+      tags:
+        - "user"
+      summary: "Get user by username"
+      description: "Returns the user that matched the username"
+      operationId: "getUserByName"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "username"
+          in: "path"
+          description: "The user that needs to be fetched. use 'jdoe' for testing"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/User"
+        400:
+          description: "Invalid username supplied"
+        404:
+          description: "User not found"
+    put:
+      tags:
+        - "user"
+      summary: "Updates user"
+      description: "Updates the user information"
+      operationId: "updateUser"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "username"
+          in: "path"
+          description: "Username that needs to be updated"
+          required: true
+          type: "string"
+        - in: "body"
+          name: "body"
+          description: "Updated user object"
+          required: true
+          schema:
+            $ref: "#/definitions/User"
+      responses:
+        400:
+          description: "Invalid user supplied"
+        404:
+          description: "User not found"
+    delete:
+      tags:
+        - "user"
+      summary: "Delete user"
+      description: "Deletes a user. You can delete any user except the system default(admin) and test(jdoe) user"
+      operationId: "deleteUser"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "username"
+          in: "path"
+          description: "The name that needs to be deleted"
+          required: true
+          type: "string"
+      responses:
+        400:
+          description: "Invalid username supplied"
+        404:
+          description: "User not found"
+
+  /appointment:
+    get:
+      tags:
+        - "appointment"
+      summary: "Returns appointments by status"
+      description: "Returns a map of appointment ids and status codes"
+    post:
+      tags:
+        - "appointment"
+      summary: "Creates an appointment record"
+      description: "Creates an appointment record and returns the appointment id of the created record"
+      operationId: "createAppointment"
+
+  /appointment/{userId}:
+    get:
+      tags:
+        - "appointment"
+      summary: "Returns all appointments of the user"
+      description: "Returns a map of appointment ids and status codes of a specific user. This returns appointments ids with the user as a specific role in the appointment, e.g all appointments as a doctor if the user type is a doctor."
+      operationId: "getAppointmentAsType"
+      produces:
+        - "application/json"
+      paramenters:
+        - name: "usertype"
+          in: "query"
+          description: "The user type to "
+          required: true
+          type: "string"
+
+  /appointment/{appointmentId}:
+    get:
+      tags:
+        - "appointment"
+      summary: ""
+    delete:
+      tags:
+        - "appointment"
+      summary: ""
+
+
+# policy has an agent, an approver and client
+# appointment has policy (so client can get his policies), the diagnosis, time and date, location, and the doctor
