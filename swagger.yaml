@@ -30,6 +30,9 @@ definitions:
   User:
     type: "object"
     properties:
+      id:
+        type: "integer"
+        format: "int64"
       username:
         type: "string"
         description: "The user's username"
@@ -51,27 +54,23 @@ definitions:
       photoUrl:
         type: "string"
         description: "The user's profile photo url"
-      type:
+      userType:
         type: "string"
         description: "The user type"
-        schema:
-          $ref: "#/definitions/User"
-  UserType:
-    type: "string"
-    enum:
-    - "patient"
-    - "doctor"
-    - "agent"
-    - "approver"
-  Appointment:
-    type: "object"
-    properties:
-      username:
-        type: "string"
-        description: "The user's username"
-      password:
-        type: "string"
-        description: "The user's password"
+        enum:
+          - "patient"
+          - "doctor"
+          - "agent"
+          - "approver"
+  # Appointment:
+  #   type: "object"
+  #   properties:
+  #     username:
+  #       type: "string"
+  #       description: "The user's username"
+  #     password:
+  #       type: "string"
+  #       description: "The user's password"
 
 paths:
   /user:
@@ -200,44 +199,45 @@ paths:
         404:
           description: "User not found"
 
-  /appointment:
-    get:
-      tags:
-        - "appointment"
-      summary: "Returns appointments by status"
-      description: "Returns a map of appointment ids and status codes"
-    post:
-      tags:
-        - "appointment"
-      summary: "Creates an appointment record"
-      description: "Creates an appointment record and returns the appointment id of the created record"
-      operationId: "createAppointment"
-
-  /appointment/{userId}:
-    get:
-      tags:
-        - "appointment"
-      summary: "Returns all appointments of the user"
-      description: "Returns a map of appointment ids and status codes of a specific user. This returns appointments ids with the user as a specific role in the appointment, e.g all appointments as a doctor if the user type is a doctor."
-      operationId: "getAppointmentAsType"
-      produces:
-        - "application/json"
-      paramenters:
-        - name: "usertype"
-          in: "query"
-          description: "The user type to "
-          required: true
-          type: "string"
-
-  /appointment/{appointmentId}:
-    get:
-      tags:
-        - "appointment"
-      summary: ""
-    delete:
-      tags:
-        - "appointment"
-      summary: ""
+  # /appointment:
+  #   get:
+  #     tags:
+  #       - "appointment"
+  #     summary: "Returns appointments by status"
+  #     description: "Returns a map of appointment ids and status codes"
+  #     operationId: "getAppointments"
+  #   post:
+  #     tags:
+  #       - "appointment"
+  #     summary: "Creates an appointment record"
+  #     description: "Creates an appointment record and returns the appointment id of the created record"
+  #     operationId: "createAppointment"
+  #
+  # /appointment/{userId}:
+  #   get:
+  #     tags:
+  #       - "appointment"
+  #     summary: "Returns all appointments of the user"
+  #     description: "Returns a map of appointment ids and status codes of a specific user. This returns appointments ids with the user as a specific role in the appointment, e.g all appointments as a doctor if the user type is a doctor."
+  #     operationId: "getAppointmentAsType"
+  #     produces:
+  #       - "application/json"
+  #     paramenters:
+  #       - name: "usertype"
+  #         in: "query"
+  #         description: "The user type to "
+  #         required: true
+  #         type: "string"
+  #
+  # /appointment/{appointmentId}:
+  #   get:
+  #     tags:
+  #       - "appointment"
+  #     summary: "Returns the appointment give the appointment id"
+  #   delete:
+  #     tags:
+  #       - "appointment"
+  #     summary: "Deletes the appointment given the appointment id"
 
 
 # policy has an agent, an approver and client
