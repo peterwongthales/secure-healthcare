@@ -4,7 +4,7 @@
   "description": "Secure Healthcare Backend",
   "main": "index.js",
   "scripts": {
-    "build": "echo \"Building server code from swagger...\" && rm -rf build && snc -o build swagger/swagger.yaml && cd build && npm install",
+    "build": "echo \"Building server code from swagger...\" && rm -rf build && snc -o build swagger.yaml && cd build && npm install",
     "start": "cd build && npm start",
     "dev": "cd build && npm run-script dev",
     "test": "echo \"Error: no test specified\" && exit 1"
