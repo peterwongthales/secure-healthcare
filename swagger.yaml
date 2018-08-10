@@ -84,15 +84,38 @@ definitions:
         format: "int64"
         description: "The policy's insurance company id"
 
-  # Appointment:
-  #   type: "object"
-  #   properties:
-  #     username:
-  #       type: "string"
-  #       description: "The user's username"
-  #     password:
-  #       type: "string"
-  #       description: "The user's password"
+  Appointment:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      username:
+        type: "string"
+        description: "The doctor's username"
+      password:
+        type: "string"
+        description: "The doctor's password"  
+      policyId:
+        type: "integer"
+        format: "int64"
+        description: "The appointment's policy id"
+      diagnosis:
+        type: "string"
+        description: "The doctor diagnosis for patient"
+      date:
+        type: "string"
+        description: "The appointment's date and time"
+      location:
+        type: "string"
+        description: "The appointment's location"
+      state:
+        type: "string"
+        description: "The appoinment's state"
+        enum:
+          - "created"
+          - "submitted"
+          - "approved"
 
 paths:
   /user:
@@ -289,46 +312,120 @@ paths:
         404:
           description: "Id not found"
 
-  # /appointment:
-  #   get:
-  #     tags:
-  #       - "appointment"
-  #     summary: "Returns appointments by status"
-  #     description: "Returns a map of appointment ids and status codes"
-  #     operationId: "getAppointments"
-  #   post:
-  #     tags:
-  #       - "appointment"
-  #     summary: "Creates an appointment record"
-  #     description: "Creates an appointment record and returns the appointment id of the created record"
-  #     operationId: "createAppointment"
-  #
-  # /appointment/{userId}:
-  #   get:
-  #     tags:
-  #       - "appointment"
-  #     summary: "Returns all appointments of the user"
-  #     description: "Returns a map of appointment ids and status codes of a specific user. This returns appointments ids with the user as a specific role in the appointment, e.g all appointments as a doctor if the user type is a doctor."
-  #     operationId: "getAppointmentAsType"
-  #     produces:
-  #       - "application/json"
-  #     paramenters:
-  #       - name: "usertype"
-  #         in: "query"
-  #         description: "The user type to "
-  #         required: true
-  #         type: "string"
-  #
-  # /appointment/{appointmentId}:
-  #   get:
-  #     tags:
-  #       - "appointment"
-  #     summary: "Returns the appointment give the appointment id"
-  #   delete:
-  #     tags:
-  #       - "appointment"
-  #     summary: "Deletes the appointment given the appointment id"
+  /appointment:
+    get:
+      tags:
+        - "appointment"
+      summary: "Returns all appointments"
+      operationId: "getAppointments"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Appointment"
+    post:
+      tags:
+        - "appointment"
+      summary: "Create appointment"
+      description: "Create an appointment in the system"
+      operationId: "createAppointment"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Created appointment object"
+          required: true
+          schema:
+            $ref: "#/definitions/Appointment"
+      responses:
+        default:
+          description: "Successful operation"
 
+  /appointment/user/{username}:
+    get:
+      tags:
+        - "appointment"
+      summary: "Get appointments by username"
+      description: "Return all policies related to username." 
+      operationId: "getAppointmentsByUsername"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "username"
+          in: "path"
+          description: "The username on which the appointment needs to be fetched. use 'jdoe' for testing"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Appointment"
+        404:
+          description: "User not found"
 
-# policy has an agent, an approver and client
-# appointment has policy (so client can get his policies), the diagnosis, time and date, location, and the doctor
+  /appointment/{id}:
+    put:
+      tags:
+        - "appointment"
+      summary: "Update appointment state"
+      description: "Update appointment state. A user with type patient is allowed to update appointment state from 'created' to 'submitted'. A user with type approver is allowed to update appointment state from 'submitted' to 'approved'."
+      operationId: "updateAppointmentState"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "The id that needs to be deleted"
+          required: true
+          type: "string"
+        - name: "username"
+          in: "query"
+          description: "The username that want to update"
+          required: true
+          type: "string"
+        - name: "password"
+          in: "query"
+          description: "The username's password"
+          required: true
+          type: "string"
+        - name: "appointmentState"
+          in: "query"
+          description: "The appointment's state"
+          required: true
+          type: "string"
+          enum:
+            - "created"
+            - "submitted"
+            - "approved"
+      responses:
+        400:
+          description: "Invalid id supplied"
+        404:
+          description: "Id not found"
+    delete:
+      tags:
+        - "appointment"
+      summary: "Delete appointment"
+      description: "Deletes a appointment"
+      operationId: "deleteAppointment"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "The id that needs to be deleted"
+          required: true
+          type: "string"
+      responses:
+        400:
+          description: "Invalid id supplied"
+        404:
+          description: "Id not found"
