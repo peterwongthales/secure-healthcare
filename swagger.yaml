@@ -30,9 +30,6 @@ definitions:
   User:
     type: "object"
     properties:
-      id:
-        type: "integer"
-        format: "int64"
       username:
         type: "string"
         description: "The user's username"
@@ -75,14 +72,12 @@ definitions:
       password:
         type: "string"
         description: "The agent's password"  
-      patientId:
-        type: "integer"
-        format: "int64"
-        description: "The policy's patient id"
-      approverId:
-        type: "integer"
-        format: "int64"
-        description: "The policy's insurance company id"
+      patient:
+        type: "string"
+        description: "The policy's patient username"
+      approver:
+        type: "string"
+        description: "The policy's insurance company username"
 
   Appointment:
     type: "object"
