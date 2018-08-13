@@ -137,6 +137,8 @@ paths:
       responses:
         default:
           description: "Successful operation"
+        403:
+          description: "Duplicate username"
   /user/login:
     get:
       tags:
